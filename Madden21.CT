@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="27">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"CT Version: 1.0.0"</Description>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"Features"</Description>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>3</ID>
+          <Description>"Franchise"</Description>
+          <LastState Value="" RealAddress="00000000"/>
+          <GroupHeader>1</GroupHeader>
+          <CheatEntries>
+            <CheatEntry>
+              <ID>0</ID>
+              <Description>"Force CPU to accept player trade"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Madden21.exe
+  Version:
+  Date   : 2020-08-28
+  Author : Aranaktu
+
+  This script force CPU to accept players trade offer, as on screenshot below:
+  https://i.imgur.com/akKj2LP.jpg
+
+  How to use:
+  1. Activate the script
+  2. Enter player card you want to trade -&gt; Overview -&gt; Trade Away
+  3. On trade screen select players that you want
+  4. Submit trade
+}
+
+[ENABLE]
+aobscanmodule(INJECT_AlwaysAcceptTrade1,Madden21.exe,89 44 24 48 83 F8 01) // should be unique
+alloc(newmem_AlwaysAcceptTrade1,$1000,143E2CABE)
+
+label(code_AlwaysAcceptTrade1)
+label(ret_AlwaysAcceptTrade1)
+
+newmem_AlwaysAcceptTrade1:
+  mov eax, 1
+code_AlwaysAcceptTrade1:
+  mov [rsp+48],eax
+  cmp eax,01
+  jmp ret_AlwaysAcceptTrade1
+
+INJECT_AlwaysAcceptTrade1:
+  jmp newmem_AlwaysAcceptTrade1
+  nop
+  nop
+ret_AlwaysAcceptTrade1:
+registersymbol(INJECT_AlwaysAcceptTrade1)
+
+aobscanmodule(INJECT_AlwaysAcceptTrade2,Madden21.exe,84 C0 0F 84 6D 03 00 00 4D) // should be unique
+alloc(newmem_AlwaysAcceptTrade2,$1000,143E2C83C)
+
+label(code_AlwaysAcceptTrade2)
+label(ret_AlwaysAcceptTrade2)
+
+newmem_AlwaysAcceptTrade2:
+  mov al, 1
+code_AlwaysAcceptTrade2:
+  db 84 C0 0F 84 6D 03 00 00
+  jmp ret_AlwaysAcceptTrade2
+
+INJECT_AlwaysAcceptTrade2:
+  jmp newmem_AlwaysAcceptTrade2
+  nop
+  nop
+  nop
+ret_AlwaysAcceptTrade2:
+registersymbol(INJECT_AlwaysAcceptTrade2)
+
+[DISABLE]
+INJECT_AlwaysAcceptTrade1:
+  db 89 44 24 48 83 F8 01
+
+unregistersymbol(INJECT_AlwaysAcceptTrade1)
+dealloc(newmem_AlwaysAcceptTrade1)
+
+INJECT_AlwaysAcceptTrade2:
+  db 84 C0 0F 84 6D 03 00 00
+
+unregistersymbol(INJECT_AlwaysAcceptTrade2)
+dealloc(newmem_AlwaysAcceptTrade2)
+
+{
+// ORIGINAL code_AlwaysAcceptTrade1 - INJECTION POINT: "Madden21.exe"+3E2CABE
+
+"Madden21.exe"+3E2CA93: 49 8B D9                 -  mov rbx,r9
+"Madden21.exe"+3E2CA96: 49 8B F8                 -  mov rdi,r8
+"Madden21.exe"+3E2CA99: 48 8B F2                 -  mov rsi,rdx
+"Madden21.exe"+3E2CA9C: 4C 8B F1                 -  mov r14,rcx
+"Madden21.exe"+3E2CA9F: 48 8B AC 24 C8 00 00 00  -  mov rbp,[rsp+000000C8]
+"Madden21.exe"+3E2CAA7: 48 89 68 88              -  mov [rax-78],rbp
+"Madden21.exe"+3E2CAAB: 4C 8B BC 24 C0 00 00 00  -  mov r15,[rsp+000000C0]
+"Madden21.exe"+3E2CAB3: 4D 8B CF                 -  mov r9,r15
+"Madden21.exe"+3E2CAB6: 48 8B D3                 -  mov rdx,rbx
+"Madden21.exe"+3E2CAB9: E8 B2 01 00 00           -  call Madden21.exe+3E2CC70
+// ---------- INJECTING HERE ----------
+"Madden21.exe"+3E2CABE: 89 44 24 48              -  mov [rsp+48],eax
+"Madden21.exe"+3E2CAC2: 83 F8 01                 -  cmp eax,01
+// ---------- DONE INJECTING  ----------
+"Madden21.exe"+3E2CAC5: 75 20                    -  jne Madden21.exe+3E2CAE7
+"Madden21.exe"+3E2CAC7: 48 89 6C 24 28           -  mov [rsp+28],rbp
+"Madden21.exe"+3E2CACC: 4C 89 7C 24 20           -  mov [rsp+20],r15
+"Madden21.exe"+3E2CAD1: 4C 8B CB                 -  mov r9,rbx
+"Madden21.exe"+3E2CAD4: 4C 8B C7                 -  mov r8,rdi
+"Madden21.exe"+3E2CAD7: 48 8B D6                 -  mov rdx,rsi
+"Madden21.exe"+3E2CADA: 49 8B CE                 -  mov rcx,r14
+"Madden21.exe"+3E2CADD: E8 5E F8 FF FF           -  call Madden21.exe+3E2C340
+"Madden21.exe"+3E2CAE2: E9 64 01 00 00           -  jmp Madden21.exe+3E2CC4B
+"Madden21.exe"+3E2CAE7: 33 F6                    -  xor esi,esi
+}
+
+{
+// ORIGINAL code_AlwaysAcceptTrade2 - INJECT_AlwaysAcceptTrade2ION POINT: "Madden21.exe"+3E2C4C7
+
+"Madden21.exe"+3E2C497: 41 B9 01 00 00 00        -  mov r9d,00000001
+"Madden21.exe"+3E2C49D: 48 8B CB                 -  mov rcx,rbx
+"Madden21.exe"+3E2C4A0: FF 90 50 01 00 00        -  call qword ptr [rax+00000150]
+"Madden21.exe"+3E2C4A6: 48 8B 43 10              -  mov rax,[rbx+10]
+"Madden21.exe"+3E2C4AA: FF 80 A0 01 00 00        -  inc [rax+000001A0]
+"Madden21.exe"+3E2C4B0: 4C 8B 45 77              -  mov r8,[rbp+77]
+"Madden21.exe"+3E2C4B4: 49 8B D6                 -  mov rdx,r14
+"Madden21.exe"+3E2C4B7: 48 8B 5D 57              -  mov rbx,[rbp+57]
+"Madden21.exe"+3E2C4BB: 48 8B 8B B8 01 00 00     -  mov rcx,[rbx+000001B8]
+"Madden21.exe"+3E2C4C2: E8 D9 25 E9 FF           -  call Madden21.exe+3CBEAA0
+// ---------- INJECT_AlwaysAcceptTrade2ING HERE ----------
+"Madden21.exe"+3E2C4C7: 84 C0                    -  test al,al
+"Madden21.exe"+3E2C4C9: 0F 84 6D 03 00 00        -  je Madden21.exe+3E2C83C
+// ---------- DONE INJECT_AlwaysAcceptTrade2ING  ----------
+"Madden21.exe"+3E2C4CF: 4D 8B 37                 -  mov r14,[r15]
+"Madden21.exe"+3E2C4D2: 4D 85 F6                 -  test r14,r14
+"Madden21.exe"+3E2C4D5: 0F 95 C0                 -  setne al
+"Madden21.exe"+3E2C4D8: 84 C0                    -  test al,al
+"Madden21.exe"+3E2C4DA: 75 1A                    -  jne Madden21.exe+3E2C4F6
+"Madden21.exe"+3E2C4DC: 4C 8D 05 ED 97 B2 01     -  lea r8,[Madden21.exe+5955CD0]
+"Madden21.exe"+3E2C4E3: 48 8D 55 8F              -  lea rdx,[rbp-71]
+"Madden21.exe"+3E2C4E7: B9 96 00 00 00           -  mov ecx,00000096
+"Madden21.exe"+3E2C4EC: E8 0F 13 11 00           -  call Madden21.exe+3F3D800
+"Madden21.exe"+3E2C4F1: E9 B1 02 00 00           -  jmp Madden21.exe+3E2C7A7
+}
+</AssemblerScript>
+            </CheatEntry>
+          </CheatEntries>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>

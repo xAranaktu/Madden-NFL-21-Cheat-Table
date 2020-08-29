@@ -3,7 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>1</ID>
-      <Description>"CT Version: 1.0.0"</Description>
+      <Description>"CT Version: 1.0.1"</Description>
       <LastState Value="" RealAddress="00000000"/>
       <GroupHeader>1</GroupHeader>
     </CheatEntry>
@@ -16,6 +16,7 @@
         <CheatEntry>
           <ID>3</ID>
           <Description>"Franchise"</Description>
+          <Options moHideChildren="1"/>
           <LastState Value="" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
@@ -151,6 +152,226 @@ dealloc(newmem_AlwaysAcceptTrade2)
 "Madden21.exe"+3E2C4F1: E9 B1 02 00 00           -  jmp Madden21.exe+3E2C7A7
 }
 </AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>12</ID>
+              <Description>"Weekly Training"</Description>
+              <Options moHideChildren="1"/>
+              <LastState Value="" RealAddress="00000000"/>
+              <GroupHeader>1</GroupHeader>
+              <CheatEntries>
+                <CheatEntry>
+                  <ID>11</ID>
+                  <Description>"Modify Exp"</Description>
+                  <Options moHideChildren="1"/>
+                  <LastState/>
+                  <VariableType>Auto Assembler Script</VariableType>
+                  <AssemblerScript>{ Game   : Madden21.exe
+  Version:
+  Date   : 2020-08-29
+  Author : Aranaktu
+
+  This allows you to cheat in weekly training.
+
+  Better to turn off the script after you finish training.
+  It might affect other in-game events and cause game crashes.
+
+  4095XP is max Drill XP.
+
+  How to use:
+  1. Activate the script
+  2. Edit values that you want to change
+  3. Start Training
+}
+
+[ENABLE]
+aobscanmodule(INJECT_TrainingEvent,Madden21.exe,08 48 8B 5A 10 8B 52 18 48 8B CB 44 8B 8C) // should be unique
+alloc(newmem,$1000,143A9489D)
+
+alloc(pBaseExpMul, 8, 143A9489D)
+registersymbol(pBaseExpMul)
+pBaseExpMul:
+dq 0
+
+alloc(pBonusExpMul, 8, 143A9489D)
+registersymbol(pBonusExpMul)
+pBonusExpMul:
+dq 0
+
+alloc(pMaxBaseExp, 8, 143A9489D)
+registersymbol(pMaxBaseExp)
+pMaxBaseExp:
+dq 0
+
+alloc(pMaxBonusExp, 8, 143A9489D)
+registersymbol(pMaxBonusExp)
+pMaxBonusExp:
+dq 0
+
+label(code_TrainingEvent)
+label(ret_TrainingEvent)
+label(set_maxbonusexp)
+label(mul_base)
+label(mul_bonus)
+
+newmem:
+  mov rcx, [pMaxBaseExp]
+  cmp rcx, 0
+  je set_maxbonusexp
+  xor rcx, rcx
+  mov ecx, #4095
+  // minExp
+  mov [rsp+00000070], ecx
+  // maxExp
+  mov [rsp+00000078], ecx
+  // baseExp
+  mov [rsp+00000088], ecx
+
+set_maxbonusexp:
+  mov rcx, [pMaxBonusExp]
+  cmp rcx, 0
+  je mul_base
+  xor rcx, rcx
+  mov ecx, #1807
+  // bonusExp
+  mov [rsp+00000090], ecx
+
+mul_base:
+  mov rcx, [pBaseExpMul]
+  cmp rcx, 0
+  je mul_bonus
+  cmp rcx, 1
+  je mul_bonus
+  mov r9d, [rsp+00000070]
+  imul r9d, ecx
+  mov [rsp+00000070], r9d
+  mov r9d, [rsp+00000078]
+  imul r9d, ecx
+  mov [rsp+00000078], r9d
+  mov r9d, [rsp+00000088]
+  imul r9d, ecx
+  mov [rsp+00000088], r9d
+
+
+mul_bonus:
+  mov rcx, [pBonusExpMul]
+  cmp rcx, 0
+  je code_TrainingEvent
+  mov rcx, [pBonusExpMul]
+  cmp rcx, 1
+  je code_TrainingEvent
+  mov r9d, [rsp+00000090]
+  imul r9d, ecx
+  mov [rsp+00000090], r9d
+
+code_TrainingEvent:
+  mov edx,[rdx+18]
+  mov rcx,rbx
+  jmp ret_TrainingEvent
+
+INJECT_TrainingEvent+05:
+  jmp newmem
+  nop
+ret_TrainingEvent:
+registersymbol(INJECT_TrainingEvent)
+
+[DISABLE]
+//code_TrainingEvent from here till the end of the code_TrainingEvent will be used to disable the cheat
+INJECT_TrainingEvent+05:
+  db 8B 52 18 48 8B CB
+
+unregistersymbol(INJECT_TrainingEvent)
+unregistersymbol(pBaseExpMul)
+unregistersymbol(pBonusExpMul)
+unregistersymbol(pMaxBaseExp)
+unregistersymbol(pMaxBonusExp)
+dealloc(pBaseExpMul)
+dealloc(pBonusExpMul)
+dealloc(pMaxBaseExp)
+dealloc(pMaxBonusExp)
+dealloc(newmem)
+
+{
+// ORIGINAL code_TrainingEvent - INJECTION POINT: "Madden21.exe"+3A9489D
+
+"Madden21.exe"+3A94879: 75 05                    -  jne Madden21.exe+3A94880
+"Madden21.exe"+3A9487B: 4C 8B C7                 -  mov r8,rdi
+"Madden21.exe"+3A9487E: EB 19                    -  jmp Madden21.exe+3A94899
+"Madden21.exe"+3A94880: 41 B9 01 00 00 00        -  mov r9d,00000001
+"Madden21.exe"+3A94886: 66 44 3B 89 D8 00 00 00  -  cmp r9w,[rcx+000000D8]
+"Madden21.exe"+3A9488E: 7C 05                    -  jl Madden21.exe+3A94895
+"Madden21.exe"+3A94890: 4C 8B C7                 -  mov r8,rdi
+"Madden21.exe"+3A94893: EB 04                    -  jmp Madden21.exe+3A94899
+"Madden21.exe"+3A94895: 4D 8B 40 08              -  mov r8,[r8+08]
+"Madden21.exe"+3A94899: 48 8B 5A 10              -  mov rbx,[rdx+10]
+// ---------- INJECTING HERE ----------
+"Madden21.exe"+3A9489D: 8B 52 18                 -  mov edx,[rdx+18]
+"Madden21.exe"+3A948A0: 48 8B CB                 -  mov rcx,rbx
+// ---------- DONE INJECTING  ----------
+"Madden21.exe"+3A948A3: 44 8B 8C 24 80 00 00 00  -  mov r9d,[rsp+00000080]
+"Madden21.exe"+3A948AB: 48 8B 03                 -  mov rax,[rbx]
+"Madden21.exe"+3A948AE: FF 90 50 01 00 00        -  call qword ptr [rax+00000150]
+"Madden21.exe"+3A948B4: 48 8B 43 10              -  mov rax,[rbx+10]
+"Madden21.exe"+3A948B8: FF 80 A0 01 00 00        -  inc [rax+000001A0]
+"Madden21.exe"+3A948BE: 48 8B 4E 10              -  mov rcx,[rsi+10]
+"Madden21.exe"+3A948C2: 48 8B 56 08              -  mov rdx,[rsi+08]
+"Madden21.exe"+3A948C6: 4C 8B 81 D0 00 00 00     -  mov r8,[rcx+000000D0]
+"Madden21.exe"+3A948CD: 4D 85 C0                 -  test r8,r8
+"Madden21.exe"+3A948D0: 75 05                    -  jne Madden21.exe+3A948D7
+}
+</AssemblerScript>
+                  <CheatEntries>
+                    <CheatEntry>
+                      <ID>13</ID>
+                      <Description>"Base Experience"</Description>
+                      <Options moHideChildren="1"/>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <GroupHeader>1</GroupHeader>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>17</ID>
+                          <Description>"Max Exp"</Description>
+                          <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:'No'
+1:'Yes'
+</DropDownList>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>pMaxBaseExp</Address>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>15</ID>
+                          <Description>"Multiplier"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>pBaseExpMul</Address>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                    <CheatEntry>
+                      <ID>14</ID>
+                      <Description>"Bonus Experience"</Description>
+                      <Options moHideChildren="1"/>
+                      <LastState Value="" RealAddress="00000000"/>
+                      <GroupHeader>1</GroupHeader>
+                      <CheatEntries>
+                        <CheatEntry>
+                          <ID>18</ID>
+                          <Description>"Max Exp"</Description>
+                          <DropDownList ReadOnly="1" DescriptionOnly="1" DisplayValueAsItem="1">0:'No'
+1:'Yes'
+</DropDownList>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>pMaxBonusExp</Address>
+                        </CheatEntry>
+                        <CheatEntry>
+                          <ID>16</ID>
+                          <Description>"Multiplier"</Description>
+                          <VariableType>4 Bytes</VariableType>
+                          <Address>pBonusExpMul</Address>
+                        </CheatEntry>
+                      </CheatEntries>
+                    </CheatEntry>
+                  </CheatEntries>
+                </CheatEntry>
+              </CheatEntries>
             </CheatEntry>
           </CheatEntries>
         </CheatEntry>

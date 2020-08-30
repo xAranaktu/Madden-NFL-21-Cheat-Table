@@ -3,7 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>1</ID>
-      <Description>"CT Version: 1.0.1"</Description>
+      <Description>"CT Version: 1.0.2"</Description>
       <LastState Value="" RealAddress="00000000"/>
       <GroupHeader>1</GroupHeader>
     </CheatEntry>
@@ -20,6 +20,132 @@
           <LastState Value="" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
+            <CheatEntry>
+              <ID>26</ID>
+              <Description>"Scouting Points - 99999"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Madden21.exe
+  Version:
+  Date   : 2020-08-30
+  Author : Aranaktu
+
+  Set Scouting Points on 99999
+
+  How to use:
+  1. Activate the script.
+  2. In-game go to SCOUT COLLEGE PLAYERS
+}
+
+[ENABLE]
+//code_SCOUTPTS from here to '[DISABLE]' will be used to enable the cheat
+
+aobscanmodule(INJECT_SCOUTPTS,Madden21.exe,FF 90 08 01 00 00 41 89 84 24 7C) // should be unique
+alloc(newmem_SCOUTPTS,$1000,"Madden21.exe"+3D5D3BA)
+
+label(code_SCOUTPTS)
+label(ret_SCOUTPTS)
+
+newmem_SCOUTPTS:
+  push r15
+  mov r15, [rcx+38]
+  mov [r15+7D80], #99999
+  pop r15
+code_SCOUTPTS:
+  call qword ptr [rax+00000108]
+  jmp ret_SCOUTPTS
+
+INJECT_SCOUTPTS:
+  jmp newmem_SCOUTPTS
+  nop
+ret_SCOUTPTS:
+registersymbol(INJECT_SCOUTPTS)
+
+[DISABLE]
+//code_SCOUTPTS from here till the end of the code_SCOUTPTS will be used to disable the cheat
+INJECT_SCOUTPTS:
+  db FF 90 08 01 00 00
+
+unregistersymbol(INJECT_SCOUTPTS)
+dealloc(newmem_SCOUTPTS)
+
+{
+// ORIGINAL code_SCOUTPTS - INJECT_SCOUTPTSION POINT: "Madden21.exe"+3D5D3BA
+
+"Madden21.exe"+3D5D392: B9 92 00 00 00           -  mov ecx,00000092
+"Madden21.exe"+3D5D397: 66 3B 8B D8 00 00 00     -  cmp cx,[rbx+000000D8]
+"Madden21.exe"+3D5D39E: 7C 05                    -  jl Madden21.exe+3D5D3A5
+"Madden21.exe"+3D5D3A0: 4D 8B C5                 -  mov r8,r13
+"Madden21.exe"+3D5D3A3: EB 07                    -  jmp Madden21.exe+3D5D3AC
+"Madden21.exe"+3D5D3A5: 4D 8B 80 90 04 00 00     -  mov r8,[r8+00000490]
+"Madden21.exe"+3D5D3AC: 48 8B 55 B8              -  mov rdx,[rbp-48]
+"Madden21.exe"+3D5D3B0: 48 8B 4A 10              -  mov rcx,[rdx+10]
+"Madden21.exe"+3D5D3B4: 48 8B 01                 -  mov rax,[rcx]
+"Madden21.exe"+3D5D3B7: 8B 52 18                 -  mov edx,[rdx+18]
+// ---------- INJECT_SCOUTPTSING HERE ----------
+"Madden21.exe"+3D5D3BA: FF 90 08 01 00 00        -  call qword ptr [rax+00000108]
+// ---------- DONE INJECT_SCOUTPTSING  ----------
+"Madden21.exe"+3D5D3C0: 41 89 84 24 7C 03 00 00  -  mov [r12+0000037C],eax
+"Madden21.exe"+3D5D3C8: 48 8B 44 24 78           -  mov rax,[rsp+78]
+"Madden21.exe"+3D5D3CD: 48 8B 48 10              -  mov rcx,[rax+10]
+"Madden21.exe"+3D5D3D1: 8B 51 2C                 -  mov edx,[rcx+2C]
+"Madden21.exe"+3D5D3D4: 8B 48 18                 -  mov ecx,[rax+18]
+"Madden21.exe"+3D5D3D7: 81 E1 FF FF 01 00        -  and ecx,0001FFFF
+"Madden21.exe"+3D5D3DD: C1 E2 11                 -  shl edx,11
+"Madden21.exe"+3D5D3E0: 0B CA                    -  or ecx,edx
+"Madden21.exe"+3D5D3E2: 41 89 8C 24 30 01 00 00  -  mov [r12+00000130],ecx
+"Madden21.exe"+3D5D3EA: 4C 8B 8B D0 00 00 00     -  mov r9,[rbx+000000D0]
+}
+</AssemblerScript>
+            </CheatEntry>
+            <CheatEntry>
+              <ID>22</ID>
+              <Description>"Coach XP - 99999"</Description>
+              <LastState/>
+              <VariableType>Auto Assembler Script</VariableType>
+              <AssemblerScript>{ Game   : Madden21.exe
+  Version:
+  Date   : 2020-08-30
+  Author : Aranaktu
+
+  Set Coach XP on 99999
+
+  How to use:
+  1. Activate the script.
+  2. In-game go to TEAM -&gt; MY TEAM -&gt; SPEND COACH XP
+}
+[ENABLE]
+
+aobscanmodule(INJECT_COACHXP,Madden21.exe,41 C7 41 28 F1 03 20 00 49 8B 3C 24 48 85 FF 0F 95 C0 84 C0 0F 84 AB) // should be unique
+alloc(newmem_COACHXP,$1000,"Madden21.exe"+3D1550E)
+
+label(code_COACHXP)
+label(ret_COACHXP)
+
+newmem_COACHXP:
+  push r15
+  mov r15, [rcx+38]
+  mov [r15+1234], #99999
+  pop r15
+code_COACHXP:
+  call qword ptr [rax+00000108]
+  jmp ret_COACHXP
+
+INJECT_COACHXP+14C:
+  jmp newmem_COACHXP
+  nop
+ret_COACHXP:
+registersymbol(INJECT_COACHXP)
+
+[DISABLE]
+
+INJECT_COACHXP+14C:
+  db FF 90 08 01 00 00
+
+unregistersymbol(INJECT_COACHXP)
+dealloc(newmem_COACHXP)
+</AssemblerScript>
+            </CheatEntry>
             <CheatEntry>
               <ID>0</ID>
               <Description>"Force CPU to accept player trade"</Description>

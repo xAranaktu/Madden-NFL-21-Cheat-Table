@@ -1,0 +1,10 @@
+v1.0.0: 
+    - Added Force CPU to accept player trade
+
+v1.0.1: 
+    - Added Modifiers for Weekly Training
+    
+v1.0.2: 
+    - Added:
+      - Coach XP - 99999
+      - Scouting Points - 99999

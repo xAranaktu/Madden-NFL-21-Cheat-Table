@@ -8,3 +8,8 @@ v1.0.2:
     - Added:
       - Coach XP - 99999
       - Scouting Points - 99999
+
+v1.0.3:
+    - Fixed all scripts, should work with latest game update now.
+    - Changed:
+        Assigned Scouting Points from 99999 to 65535

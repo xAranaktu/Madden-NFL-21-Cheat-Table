@@ -3,7 +3,7 @@
   <CheatEntries>
     <CheatEntry>
       <ID>1</ID>
-      <Description>"CT Version: 1.0.2"</Description>
+      <Description>"CT Version: 1.0.3"</Description>
       <LastState Value="" RealAddress="00000000"/>
       <GroupHeader>1</GroupHeader>
     </CheatEntry>
@@ -17,12 +17,12 @@
           <ID>3</ID>
           <Description>"Franchise"</Description>
           <Options moHideChildren="1"/>
-          <LastState Value="" RealAddress="00000000"/>
+          <LastState Value="" Activated="1" RealAddress="00000000"/>
           <GroupHeader>1</GroupHeader>
           <CheatEntries>
             <CheatEntry>
               <ID>26</ID>
-              <Description>"Scouting Points - 99999"</Description>
+              <Description>"Scouting Points - 65535"</Description>
               <LastState/>
               <VariableType>Auto Assembler Script</VariableType>
               <AssemblerScript>{ Game   : Madden21.exe
@@ -40,17 +40,38 @@
 [ENABLE]
 //code_SCOUTPTS from here to '[DISABLE]' will be used to enable the cheat
 
-aobscanmodule(INJECT_SCOUTPTS,Madden21.exe,FF 90 08 01 00 00 41 89 84 24 7C) // should be unique
+aobscanmodule(INJECT_SCOUTPTS,Madden21.exe,FF 90 08 01 00 00 41 89 85 7C) // should be unique
 alloc(newmem_SCOUTPTS,$1000,"Madden21.exe"+3D5D3BA)
 
 label(code_SCOUTPTS)
 label(ret_SCOUTPTS)
 
 newmem_SCOUTPTS:
-  push r15
-  mov r15, [rcx+38]
-  mov [r15+7D80], #99999
-  pop r15
+  push r9
+  push rdx
+  push rbx
+  push rcx
+  push rax
+  mov rbx, rdx
+  mov r9, [rcx+38]
+  mov ecx, [r9+r8*4+20]
+  mov edx, [r9+0C]
+  mov eax, ecx
+  shr eax, 5
+  and cl, 1F
+  imul rdx, rbx
+  add rdx, rax
+  mov eax, [r9+18]
+  add rdx, rax
+  mov rax, [r9+rdx*4]
+  mov eax, FFFF
+  mov [r9+rdx*4], eax
+
+  pop rax
+  pop rcx
+  pop rbx
+  pop rdx
+  pop r9
 code_SCOUTPTS:
   call qword ptr [rax+00000108]
   jmp ret_SCOUTPTS
@@ -70,31 +91,31 @@ unregistersymbol(INJECT_SCOUTPTS)
 dealloc(newmem_SCOUTPTS)
 
 {
-// ORIGINAL code_SCOUTPTS - INJECT_SCOUTPTSION POINT: "Madden21.exe"+3D5D3BA
+// ORIGINAL CODE - INJECTION POINT: "Madden21.exe"+4058DE2
 
-"Madden21.exe"+3D5D392: B9 92 00 00 00           -  mov ecx,00000092
-"Madden21.exe"+3D5D397: 66 3B 8B D8 00 00 00     -  cmp cx,[rbx+000000D8]
-"Madden21.exe"+3D5D39E: 7C 05                    -  jl Madden21.exe+3D5D3A5
-"Madden21.exe"+3D5D3A0: 4D 8B C5                 -  mov r8,r13
-"Madden21.exe"+3D5D3A3: EB 07                    -  jmp Madden21.exe+3D5D3AC
-"Madden21.exe"+3D5D3A5: 4D 8B 80 90 04 00 00     -  mov r8,[r8+00000490]
-"Madden21.exe"+3D5D3AC: 48 8B 55 B8              -  mov rdx,[rbp-48]
-"Madden21.exe"+3D5D3B0: 48 8B 4A 10              -  mov rcx,[rdx+10]
-"Madden21.exe"+3D5D3B4: 48 8B 01                 -  mov rax,[rcx]
-"Madden21.exe"+3D5D3B7: 8B 52 18                 -  mov edx,[rdx+18]
-// ---------- INJECT_SCOUTPTSING HERE ----------
-"Madden21.exe"+3D5D3BA: FF 90 08 01 00 00        -  call qword ptr [rax+00000108]
-// ---------- DONE INJECT_SCOUTPTSING  ----------
-"Madden21.exe"+3D5D3C0: 41 89 84 24 7C 03 00 00  -  mov [r12+0000037C],eax
-"Madden21.exe"+3D5D3C8: 48 8B 44 24 78           -  mov rax,[rsp+78]
-"Madden21.exe"+3D5D3CD: 48 8B 48 10              -  mov rcx,[rax+10]
-"Madden21.exe"+3D5D3D1: 8B 51 2C                 -  mov edx,[rcx+2C]
-"Madden21.exe"+3D5D3D4: 8B 48 18                 -  mov ecx,[rax+18]
-"Madden21.exe"+3D5D3D7: 81 E1 FF FF 01 00        -  and ecx,0001FFFF
-"Madden21.exe"+3D5D3DD: C1 E2 11                 -  shl edx,11
-"Madden21.exe"+3D5D3E0: 0B CA                    -  or ecx,edx
-"Madden21.exe"+3D5D3E2: 41 89 8C 24 30 01 00 00  -  mov [r12+00000130],ecx
-"Madden21.exe"+3D5D3EA: 4C 8B 8B D0 00 00 00     -  mov r9,[rbx+000000D0]
+"Madden21.exe"+4058DBA: BA 92 00 00 00        -  mov edx,00000092
+"Madden21.exe"+4058DBF: 66 3B 91 D8 00 00 00  -  cmp dx,[rcx+000000D8]
+"Madden21.exe"+4058DC6: 7C 05                 -  jl Madden21.exe+4058DCD
+"Madden21.exe"+4058DC8: 4C 8B C7              -  mov r8,rdi
+"Madden21.exe"+4058DCB: EB 07                 -  jmp Madden21.exe+4058DD4
+"Madden21.exe"+4058DCD: 4D 8B 80 90 04 00 00  -  mov r8,[r8+00000490]
+"Madden21.exe"+4058DD4: 48 8B 55 C0           -  mov rdx,[rbp-40]
+"Madden21.exe"+4058DD8: 48 8B 4A 10           -  mov rcx,[rdx+10]
+"Madden21.exe"+4058DDC: 48 8B 01              -  mov rax,[rcx]
+"Madden21.exe"+4058DDF: 8B 52 18              -  mov edx,[rdx+18]
+// ---------- INJECTING HERE ----------
+"Madden21.exe"+4058DE2: FF 90 08 01 00 00     -  call qword ptr [rax+00000108]
+// ---------- DONE INJECTING  ----------
+"Madden21.exe"+4058DE8: 41 89 85 7C 03 00 00  -  mov [r13+0000037C],eax
+"Madden21.exe"+4058DEF: 48 8B 44 24 70        -  mov rax,[rsp+70]
+"Madden21.exe"+4058DF4: 48 8B 48 10           -  mov rcx,[rax+10]
+"Madden21.exe"+4058DF8: 8B 51 2C              -  mov edx,[rcx+2C]
+"Madden21.exe"+4058DFB: 8B 48 18              -  mov ecx,[rax+18]
+"Madden21.exe"+4058DFE: 81 E1 FF FF 01 00     -  and ecx,0001FFFF
+"Madden21.exe"+4058E04: C1 E2 11              -  shl edx,11
+"Madden21.exe"+4058E07: 0B CA                 -  or ecx,edx
+"Madden21.exe"+4058E09: 41 89 8D 30 01 00 00  -  mov [r13+00000130],ecx
+"Madden21.exe"+4058E10: 48 8B 4D C8           -  mov rcx,[rbp-38]
 }
 </AssemblerScript>
             </CheatEntry>
@@ -123,10 +144,30 @@ label(code_COACHXP)
 label(ret_COACHXP)
 
 newmem_COACHXP:
-  push r15
-  mov r15, [rcx+38]
-  mov [r15+1234], #99999
-  pop r15
+  push r9
+  push rdx
+  push rbx
+  push rcx
+  push rax
+  mov rbx, rdx
+  mov r9, [rcx+38]
+  mov ecx, [r9+r8*4+20]
+  mov edx, [r9+0C]
+  mov eax, ecx
+  shr eax, 5
+  and cl, 1F
+  imul rdx, rbx
+  add rdx, rax
+  mov eax, [r9+18]
+  add rdx, rax
+
+  mov [r9+rdx*4], #99999
+
+  pop rax
+  pop rcx
+  pop rbx
+  pop rdx
+  pop r9
 code_COACHXP:
   call qword ptr [rax+00000108]
   jmp ret_COACHXP
@@ -167,7 +208,7 @@ dealloc(newmem_COACHXP)
 }
 
 [ENABLE]
-aobscanmodule(INJECT_AlwaysAcceptTrade1,Madden21.exe,89 44 24 48 83 F8 01) // should be unique
+aobscanmodule(INJECT_AlwaysAcceptTrade1,Madden21.exe,89 44 24 48 83 F8 01 75 20) // should be unique
 alloc(newmem_AlwaysAcceptTrade1,$1000,143E2CABE)
 
 label(code_AlwaysAcceptTrade1)
@@ -187,7 +228,7 @@ INJECT_AlwaysAcceptTrade1:
 ret_AlwaysAcceptTrade1:
 registersymbol(INJECT_AlwaysAcceptTrade1)
 
-aobscanmodule(INJECT_AlwaysAcceptTrade2,Madden21.exe,84 C0 0F 84 6D 03 00 00 4D) // should be unique
+aobscanmodule(INJECT_AlwaysAcceptTrade2,Madden21.exe,84 C0 0F 84 6B 08 00 00 48) // should be unique
 alloc(newmem_AlwaysAcceptTrade2,$1000,143E2C83C)
 
 label(code_AlwaysAcceptTrade2)
@@ -196,7 +237,7 @@ label(ret_AlwaysAcceptTrade2)
 newmem_AlwaysAcceptTrade2:
   mov al, 1
 code_AlwaysAcceptTrade2:
-  db 84 C0 0F 84 6D 03 00 00
+  db 84 C0 0F 84 6B 08 00 00
   jmp ret_AlwaysAcceptTrade2
 
 INJECT_AlwaysAcceptTrade2:
@@ -215,7 +256,7 @@ unregistersymbol(INJECT_AlwaysAcceptTrade1)
 dealloc(newmem_AlwaysAcceptTrade1)
 
 INJECT_AlwaysAcceptTrade2:
-  db 84 C0 0F 84 6D 03 00 00
+  db 84 C0 0F 84 6B 08 00 00
 
 unregistersymbol(INJECT_AlwaysAcceptTrade2)
 dealloc(newmem_AlwaysAcceptTrade2)
@@ -250,32 +291,32 @@ dealloc(newmem_AlwaysAcceptTrade2)
 }
 
 {
-// ORIGINAL code_AlwaysAcceptTrade2 - INJECT_AlwaysAcceptTrade2ION POINT: "Madden21.exe"+3E2C4C7
+// ORIGINAL CODE - INJECTION POINT: "Madden21.exe"+4133424
 
-"Madden21.exe"+3E2C497: 41 B9 01 00 00 00        -  mov r9d,00000001
-"Madden21.exe"+3E2C49D: 48 8B CB                 -  mov rcx,rbx
-"Madden21.exe"+3E2C4A0: FF 90 50 01 00 00        -  call qword ptr [rax+00000150]
-"Madden21.exe"+3E2C4A6: 48 8B 43 10              -  mov rax,[rbx+10]
-"Madden21.exe"+3E2C4AA: FF 80 A0 01 00 00        -  inc [rax+000001A0]
-"Madden21.exe"+3E2C4B0: 4C 8B 45 77              -  mov r8,[rbp+77]
-"Madden21.exe"+3E2C4B4: 49 8B D6                 -  mov rdx,r14
-"Madden21.exe"+3E2C4B7: 48 8B 5D 57              -  mov rbx,[rbp+57]
-"Madden21.exe"+3E2C4BB: 48 8B 8B B8 01 00 00     -  mov rcx,[rbx+000001B8]
-"Madden21.exe"+3E2C4C2: E8 D9 25 E9 FF           -  call Madden21.exe+3CBEAA0
-// ---------- INJECT_AlwaysAcceptTrade2ING HERE ----------
-"Madden21.exe"+3E2C4C7: 84 C0                    -  test al,al
-"Madden21.exe"+3E2C4C9: 0F 84 6D 03 00 00        -  je Madden21.exe+3E2C83C
-// ---------- DONE INJECT_AlwaysAcceptTrade2ING  ----------
-"Madden21.exe"+3E2C4CF: 4D 8B 37                 -  mov r14,[r15]
-"Madden21.exe"+3E2C4D2: 4D 85 F6                 -  test r14,r14
-"Madden21.exe"+3E2C4D5: 0F 95 C0                 -  setne al
-"Madden21.exe"+3E2C4D8: 84 C0                    -  test al,al
-"Madden21.exe"+3E2C4DA: 75 1A                    -  jne Madden21.exe+3E2C4F6
-"Madden21.exe"+3E2C4DC: 4C 8D 05 ED 97 B2 01     -  lea r8,[Madden21.exe+5955CD0]
-"Madden21.exe"+3E2C4E3: 48 8D 55 8F              -  lea rdx,[rbp-71]
-"Madden21.exe"+3E2C4E7: B9 96 00 00 00           -  mov ecx,00000096
-"Madden21.exe"+3E2C4EC: E8 0F 13 11 00           -  call Madden21.exe+3F3D800
-"Madden21.exe"+3E2C4F1: E9 B1 02 00 00           -  jmp Madden21.exe+3E2C7A7
+"Madden21.exe"+41333EA: 41 B9 01 00 00 00        -  mov r9d,00000001
+"Madden21.exe"+41333F0: 48 8B CB                 -  mov rcx,rbx
+"Madden21.exe"+41333F3: FF 90 50 01 00 00        -  call qword ptr [rax+00000150]
+"Madden21.exe"+41333F9: 48 8B 43 10              -  mov rax,[rbx+10]
+"Madden21.exe"+41333FD: FF 80 A0 01 00 00        -  inc [rax+000001A0]
+"Madden21.exe"+4133403: 4C 8B 85 A0 00 00 00     -  mov r8,[rbp+000000A0]
+"Madden21.exe"+413340A: 48 8B 95 90 00 00 00     -  mov rdx,[rbp+00000090]
+"Madden21.exe"+4133411: 4C 8B BD 80 00 00 00     -  mov r15,[rbp+00000080]
+"Madden21.exe"+4133418: 49 8B 8F B8 01 00 00     -  mov rcx,[r15+000001B8]
+"Madden21.exe"+413341F: E8 0C 68 E7 FF           -  call Madden21.exe+3FA9C30
+// ---------- INJECTING HERE ----------
+"Madden21.exe"+4133424: 84 C0                    -  test al,al
+"Madden21.exe"+4133426: 0F 84 6B 08 00 00        -  je Madden21.exe+4133C97
+// ---------- DONE INJECTING  ----------
+"Madden21.exe"+413342C: 48 8B 0E                 -  mov rcx,[rsi]
+"Madden21.exe"+413342F: 48 89 4D 88              -  mov [rbp-78],rcx
+"Madden21.exe"+4133433: 48 85 C9                 -  test rcx,rcx
+"Madden21.exe"+4133436: 0F 95 C0                 -  setne al
+"Madden21.exe"+4133439: 84 C0                    -  test al,al
+"Madden21.exe"+413343B: 75 1A                    -  jne Madden21.exe+4133457
+"Madden21.exe"+413343D: 4C 8D 05 3C 9C B4 01     -  lea r8,[Madden21.exe+5C7D080]
+"Madden21.exe"+4133444: 48 8D 55 A0              -  lea rdx,[rbp-60]
+"Madden21.exe"+4133448: B9 96 00 00 00           -  mov ecx,00000096
+"Madden21.exe"+413344D: E8 EE 56 12 00           -  call Madden21.exe+4258B40
 }
 </AssemblerScript>
             </CheatEntry>
